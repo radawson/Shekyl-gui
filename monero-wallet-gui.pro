@@ -62,6 +62,12 @@ SOURCES += main.cpp \
     src/libwalletqt/UnsignedTransaction.cpp \
     MainApp.cpp
 
+CONFIG(DISABLE_PASS_STRENGTH_METER) {
+    HEADERS -= src/zxcvbn-c/zxcvbn.h
+    SOURCES -= src/zxcvbn-c/zxcvbn.c
+    DEFINES += "DISABLE_PASS_STRENGTH_METER"
+}
+
 !ios {
     HEADERS += src/daemon/DaemonManager.h
     SOURCES += src/daemon/DaemonManager.cpp
@@ -320,6 +326,7 @@ TRANSLATIONS =  \ # English is default language, no explicit translation file
                 $$PWD/translations/monero-core_da.ts \ # Danish
                 $$PWD/translations/monero-core_cs.ts \ # Czech
                 $$PWD/translations/monero-core_sk.ts \ # Slovak
+                $$PWD/translations/monero-core_ar.ts \ # Arabic
 
 CONFIG(release, debug|release) {
     DESTDIR = release/bin
