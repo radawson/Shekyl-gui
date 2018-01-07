@@ -1,12 +1,12 @@
 # Monero GUI Wallet Windows Installer #
 
-Copyright (c) 2014-2017, The Monero Project
+Copyright (c) 2014-2018, The Monero Project, ClockworX
 
 ## Introduction ##
 
-This is a *Inno Setup* script `Monero.iss` plus some related files
+This is a *Inno Setup* script `shekyl.iss` plus some related files
 that allows you to build a standalone Windows installer (.exe) for
-the GUI wallet that comes with the Helium Hydra release of Monero.
+the GUI wallet that comes with the Auspicous Apple release of Shekyl.
 
 This turns the GUI wallet into a more or less standard Windows program,
 by default installed into a subdirectory of `C:\Program Files`, a
@@ -15,7 +15,7 @@ uninstall support. It helps lowering the "barrier to entry"
 somewhat, especially for less technically experienced users of
 Monero.
 
-As the setup script in file [Monero.iss](Monero.iss) has to list every
+As the setup script in file [Shekyl.iss](Shekyl.iss) has to list every
 single file of the GUI wallet package to install by name,
 this version of the script only works with exactly the GUI wallet
 for Monero release *Helium Hydra* that you find on

@@ -45,8 +45,8 @@ fi
 source ./utils.sh
 pushd $(pwd)
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-MONERO_DIR=monero
-MONEROD_EXEC=monerod
+CRYPTOCOIN_DIR=shekyl
+CRYPTOCOIN_EXEC=shekyld
 
 MAKE='make'
 if [[ $platform == *bsd* ]]; then
@@ -62,7 +62,7 @@ $MAKE -C src/zxcvbn-c || exit
 if [ ! -d build ]; then mkdir build; fi
 
 
-# Platform indepenent settings
+# Platform independent settings
 if [ "$ANDROID" != true ] && ([ "$platform" == "linux32" ] || [ "$platform" == "linux64" ]); then
     distro=$(lsb_release -is)
     if [ "$distro" == "Ubuntu" ]; then
@@ -71,26 +71,26 @@ if [ "$ANDROID" != true ] && ([ "$platform" == "linux32" ] || [ "$platform" == "
 fi
 
 if [ "$platform" == "darwin" ]; then
-    BIN_PATH=$BIN_PATH/monero-wallet-gui.app/Contents/MacOS/
+    BIN_PATH=$BIN_PATH/shekyl-wallet-gui.app/Contents/MacOS/
 elif [ "$platform" == "mingw64" ] || [ "$platform" == "mingw32" ]; then
-    MONEROD_EXEC=monerod.exe
+    CRYPTOCOIN_EXEC=shekyld.exe
 fi
 
 # force version update
 get_tag
 echo "var GUI_VERSION = \"$TAGNAME\"" > version.js
-pushd "$MONERO_DIR"
+pushd "$CRYPTOCOIN_DIR"
 get_tag
 popd
-echo "var GUI_MONERO_VERSION = \"$TAGNAME\"" >> version.js
+echo "var GUI_CRYPTOCOIN_VERSION = \"$TAGNAME\"" >> version.js
 
 cd build
-qmake ../monero-wallet-gui.pro "$CONFIG" || exit
+qmake ../shekyl-wallet-gui.pro "$CONFIG" || exit
 $MAKE || exit 
 
-# Copy monerod to bin folder
+# Copy shekyld to bin folder
 if [ "$platform" != "mingw32" ] && [ "$ANDROID" != true ]; then
-cp ../$MONERO_DIR/bin/$MONEROD_EXEC $BIN_PATH
+cp ../$CRYPTOCOIN_DIR/bin/$CRYPTOCOIN_EXEC $BIN_PATH
 fi
 
 # make deploy

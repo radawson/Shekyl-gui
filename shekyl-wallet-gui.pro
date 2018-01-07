@@ -6,7 +6,7 @@ WALLET_ROOT=$$PWD/shekyl
 
 CONFIG += c++11
 
-# cleaning "auto-generated" bitmonero directory on "make distclean"
+# cleaning "auto-generated" shekyl directory on "make distclean"
 QMAKE_DISTCLEAN += -r $$WALLET_ROOT
 
 INCLUDEPATH +=  $$WALLET_ROOT/include \
