@@ -78,16 +78,16 @@ int main(int argc, char *argv[])
 //#endif
 
     // Log settings
-    Monero::Wallet::init(argv[0], "monero-wallet-gui");
+    Monero::Wallet::init(argv[0], "shekyl-wallet-gui");
 //    qInstallMessageHandler(messageHandler);
 
     MainApp app(argc, argv);
 
     qDebug() << "app startd";
 
-    app.setApplicationName("monero-core");
-    app.setOrganizationDomain("getmonero.org");
-    app.setOrganizationName("monero-project");
+    app.setApplicationName("shekyl-core");
+    app.setOrganizationDomain("shekyl.circlex.cx");
+    app.setOrganizationName("clockworx");
 
     filter *eventFilter = new filter;
     app.installEventFilter(eventFilter);

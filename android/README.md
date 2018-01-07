@@ -1,4 +1,4 @@
-Copyright (c) 2014-2017, The Monero Project
+Copyright (c) 2014-2018, The Monero Project, ClockworX
 
 
 ## Current status : ALPHA
@@ -8,21 +8,21 @@ Copyright (c) 2014-2017, The Monero Project
 
 ## Build using Docker
 
-# Base environnement
+# Base environment
 
-        cd monero/utils/build_scripts
-        docker build -f android32.Dockerfile -t monero-android .
+        cd shekyl/utils/build_scripts
+        docker build -f android32.Dockerfile -t shekyl-android .
         cd ..
 
 # Build GUI
 
         cd android/docker
-        docker build -t monero-gui-android .
-        docker create -it --name monero-gui-android monero-gui-android bash
+        docker build -t shekyl-gui-android .
+        docker create -it --name shekyl-gui-android shekyl-gui-android bash
 
 # Get the apk
 
-        docker cp monero-gui-android:/opt/android/monero-core/build/release/bin/bin/QtApp-debug.apk .
+        docker cp shekyl-gui-android:/opt/android/shekyl-core/build/release/bin/bin/QtApp-debug.apk .
        
 ## Deployment
 
@@ -31,7 +31,7 @@ Copyright (c) 2014-2017, The Monero Project
   First, see section [Enable adb debugging on your device](https://developer.android.com/studio/command-line/adb.html#Enabling)
   The only place where we are allowed to play is `/data/local/tmp`. So : 
 
-        adb  push /opt/android/monero-core/build/release/bin/bin/QtApp-debug.apk /data/local/tmp
+        adb  push /opt/android/shekyl-core/build/release/bin/bin/QtApp-debug.apk /data/local/tmp
         adb  shell pm install -r /data/local/tmp/QtApp-debug.apk
    
   - Troubleshooting: 
