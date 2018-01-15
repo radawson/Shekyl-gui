@@ -164,6 +164,32 @@ Rectangle {
                     }
                 }
             }
+
+            StandardButton {
+                id: changePasswordButton
+                text: qsTr("Change password") + translationManager.emptyString
+                shadowReleasedColor: "#FF4304"
+                shadowPressedColor: "#B32D00"
+                releasedColor: "#FF6C3C"
+                pressedColor: "#FF4304"
+                onClicked: {
+                    passwordDialog.onAcceptedCallback = function() {
+                        if(appWindow.walletPassword === passwordDialog.password){
+                            newPasswordDialog.open()
+                        } else {
+                            informationPopup.title  = qsTr("Error") + translationManager.emptyString;
+                            informationPopup.text = qsTr("Wrong password");
+                            informationPopup.open()
+                            informationPopup.onCloseCallback = function() {
+                                changePasswordDialog.open()
+                            }
+                            passwordDialog.open()
+                        }
+                    }
+                    passwordDialog.onRejectedCallback = null;
+                    passwordDialog.open()
+                }
+            }
         }
 
         RowLayout {
@@ -564,6 +590,10 @@ Rectangle {
         TextBlock {
             Layout.fillWidth: true
             text:  (typeof currentWallet == "undefined") ? "" : qsTr("Wallet log path: ") + currentWallet.walletLogPath + translationManager.emptyString
+        }
+        TextBlock {
+            Layout.fillWidth: true
+            text: qsTr("Wallet Name: ") + walletName + translationManager.emptyString
         }
         TextBlock {
             Layout.fillWidth: true
