@@ -35,140 +35,147 @@ import QtQuick.Window 2.0
 
 import "../components" as MoneroComponents
 
-Rectangle {
+Item {
     id: root
-    color: "white"
     visible: false
-    property alias title: dialogTitle.text
-    property alias text: dialogContent.text
-    property alias content: root.text
-    property alias cancelVisible: cancelButton.visible
-    property alias okVisible: okButton.visible
-    property alias textArea: dialogContent
-    property alias okText: okButton.text
-    property alias cancelText: cancelButton.text
+    Rectangle {
+        id: bg
+        z: parent.z + 1
+        anchors.fill: parent
+        color: "white"
+        opacity: 0.9
+    }
 
-    property var icon
+    property alias labelText: label.text
+    property alias inputText: input.text
 
     // same signals as Dialog has
     signal accepted()
     signal rejected()
-    signal closeCallback();
-
-    // Make window draggable
-    MouseArea {
-        anchors.fill: parent
-        property point lastMousePos: Qt.point(0, 0)
-        onPressed: { lastMousePos = Qt.point(mouseX, mouseY); }
-        onMouseXChanged: root.x += (mouseX - lastMousePos.x)
-        onMouseYChanged: root.y += (mouseY - lastMousePos.y)
-    }
 
     function open() {
-        // Center
-        if(!isMobile) {
-            root.x = parent.width/2 - root.width/2
-            root.y = screenHeight/2 - root.height/2
-        }
+        leftPanel.enabled = false
+        middlePanel.enabled = false
+        titleBar.enabled = false
         show()
-        root.z = 11
         root.visible = true;
+        input.focus = true;
+        input.text = "";
     }
 
     function close() {
+        leftPanel.enabled = true
+        middlePanel.enabled = true
+        titleBar.enabled = true
         root.visible = false;
-        closeCallback();
     }
 
-    // TODO: implement without hardcoding sizes
-    width: isMobile ? screenWidth : 480
-    height: isMobile ? screenHeight : 280
-
     ColumnLayout {
+        z: bg.z + 1
         id: mainLayout
         spacing: 10
         anchors { fill: parent; margins: 35 }
 
-        RowLayout {
+        ColumnLayout {
             id: column
             //anchors {fill: parent; margins: 16 }
             Layout.alignment: Qt.AlignHCenter
 
             Label {
-                id: dialogTitle
+                id: label
+                Layout.alignment: Qt.AlignHCenter
+                // Layout.columnSpan: 2
+                Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 font.pixelSize: 18 * scaleRatio
                 font.family: "Arial"
                 color: "#555555"
             }
 
-        }
-
-        RowLayout {
-            TextArea {
-                id : dialogContent
+            TextField {
+                id : input
+                focus: true
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignHCenter
+                horizontalAlignment: TextInput.AlignHCenter
+                verticalAlignment: TextInput.AlignVCenter
                 font.family: "Arial"
-                textFormat: TextEdit.AutoText
-                readOnly: true
-                font.pixelSize: 12 * scaleRatio
-                selectByMouse: false
-                wrapMode: TextEdit.Wrap
+                font.pixelSize: 32 * scaleRatio
+                // echoMode: TextInput.Password
+                KeyNavigation.tab: okButton
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        appWindow.showStatusMessage(qsTr("Double tap to copy"),3)
-                    }
-                    onDoubleClicked: {
-                        parent.selectAll()
-                        parent.copy()
-                        parent.deselect()
-                        console.log("copied to clipboard");
-                        appWindow.showStatusMessage(qsTr("Content copied to clipboard"),3)
+                style: TextFieldStyle {
+                    renderType: Text.NativeRendering
+                    textColor: "#35B05A"
+                    // passwordCharacter: "•"
+                    // no background
+                    background: Rectangle {
+                        radius: 0
+                        border.width: 0
                     }
                 }
+                Keys.onReturnPressed: {
+                    root.close()
+                    root.accepted()
+                }
+                Keys.onEscapePressed: {
+                    root.close()
+                    root.rejected()
+                }
+            }
+            // underline
+            Rectangle {
+                height: 1
+                color: "#DBDBDB"
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+                anchors.bottomMargin: 3
+            }
+            // padding
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+                height: 10
+                opacity: 0
+                color: "black"
             }
         }
-
         // Ok/Cancel buttons
         RowLayout {
             id: buttons
             spacing: 60
             Layout.alignment: Qt.AlignHCenter
-
+            
             MoneroComponents.StandardButton {
                 id: cancelButton
+                width: 120
+                fontSize: 14
                 shadowReleasedColor: "#FF4304"
                 shadowPressedColor: "#B32D00"
                 releasedColor: "#FF6C3C"
                 pressedColor: "#FF4304"
                 text: qsTr("Cancel") + translationManager.emptyString
+                KeyNavigation.tab: input
                 onClicked: {
                     root.close()
                     root.rejected()
                 }
             }
-
             MoneroComponents.StandardButton {
                 id: okButton
+                width: 120
+                fontSize: 14
                 shadowReleasedColor: "#FF4304"
                 shadowPressedColor: "#B32D00"
                 releasedColor: "#FF6C3C"
                 pressedColor: "#FF4304"
-                text: qsTr("OK")
+                text: qsTr("Ok")
                 KeyNavigation.tab: cancelButton
                 onClicked: {
                     root.close()
                     root.accepted()
-
                 }
             }
         }
     }
-
 }
-
-
-

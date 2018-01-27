@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2018, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -26,21 +26,37 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import QtQuick.Controls 1.2
-import QtQuick.Controls.Styles 1.2
-import QtQuick 2.2
+#ifndef SUBADDRESSMODEL_H
+#define SUBADDRESSMODEL_H
 
-TextField {
-    font.family: "Arial"
-    horizontalAlignment: TextInput.AlignLeft
-    selectByMouse: true
-    style: TextFieldStyle {
-        textColor: "#3F3F3F"
-        placeholderTextColor: "#BABABA"
+#include <QAbstractListModel>
 
-        background: Rectangle {
-            border.width: 0
-            color: "transparent"
-        }
-    }
-}
+class Subaddress;
+
+class SubaddressModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    enum SubaddressRowRole {
+        SubaddressRole = Qt::UserRole + 1, // for the SubaddressRow object;
+        SubaddressAddressRole,
+        SubaddressLabelRole,
+    };
+    Q_ENUM(SubaddressRowRole)
+
+    SubaddressModel(QObject *parent, Subaddress *subaddress);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const  override;
+
+public slots:
+    void startReset();
+    void endReset();
+
+private:
+    Subaddress *m_subaddress;
+};
+
+#endif // SUBADDRESSMODEL_H

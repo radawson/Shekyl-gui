@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2018, The Monero Project
+// Copyright (c) 2018, The Monero Project
 // 
 // All rights reserved.
 // 
@@ -26,21 +26,36 @@
 // STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 // THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import QtQuick.Controls 1.2
-import QtQuick.Controls.Styles 1.2
-import QtQuick 2.2
+#ifndef SUBADDRESS_H
+#define SUBADDRESS_H
 
-TextField {
-    font.family: "Arial"
-    horizontalAlignment: TextInput.AlignLeft
-    selectByMouse: true
-    style: TextFieldStyle {
-        textColor: "#3F3F3F"
-        placeholderTextColor: "#BABABA"
+#include <wallet/api/wallet2_api.h>
+#include <QObject>
+#include <QList>
+#include <QDateTime>
 
-        background: Rectangle {
-            border.width: 0
-            color: "transparent"
-        }
-    }
-}
+class Subaddress : public QObject
+{
+    Q_OBJECT
+public:
+    Q_INVOKABLE QList<Monero::SubaddressRow*> getAll(bool update = false) const;
+    Q_INVOKABLE Monero::SubaddressRow * getRow(int index) const;
+    Q_INVOKABLE void addRow(quint32 accountIndex, const QString &label) const;
+    Q_INVOKABLE void setLabel(quint32 accountIndex, quint32 addressIndex, const QString &label) const;
+    Q_INVOKABLE void refresh(quint32 accountIndex) const;
+    quint64 count() const;
+
+signals:
+    void refreshStarted() const;
+    void refreshFinished() const;
+
+public slots:
+
+private:
+    explicit Subaddress(Monero::Subaddress * subaddressImpl, QObject *parent);
+    friend class Wallet;
+    Monero::Subaddress * m_subaddressImpl;
+    mutable QList<Monero::SubaddressRow*> m_rows;
+};
+
+#endif // SUBADDRESS_H
